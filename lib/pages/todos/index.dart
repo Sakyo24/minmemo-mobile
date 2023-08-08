@@ -17,7 +17,6 @@ class TodosIndexPage extends StatefulWidget {
 }
 
 class _TodosIndexPageState extends State<TodosIndexPage> {
-  final int _currentPage = 0;
   bool _isLoading = false;
 
   // Todoリスト取得処理

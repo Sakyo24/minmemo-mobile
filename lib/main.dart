@@ -20,7 +20,6 @@ class TodoApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
         primaryColor: const Color.fromARGB(255, 60, 0, 255),
-        accentColor: const Color.fromARGB(255, 60, 0, 255),
         canvasColor: const Color.fromARGB(255, 250, 250, 250)
       ),
       home: const TopPage()
