@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
+import '../../model/group.dart';
 import 'index.dart';
 import '../../utils/network.dart';
 
 class GroupsCreateEditPage extends StatefulWidget {
-  const GroupsCreateEditPage({super.key});
+  final Group? currentGroup;
+  const GroupsCreateEditPage({super.key, this.currentGroup});
 
   @override
   State<GroupsCreateEditPage> createState() => _GroupsCreateEditPageState();
@@ -15,8 +17,8 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
   TextEditingController nameController = TextEditingController();
   bool _isLoading = false;
 
-  // 登録処理
-  Future<void> createGroup() async {
+  // 登録・更新処理
+  Future<void> createUpdateGroup({String? id}) async {
     setState(() {
       _isLoading = true;
     });
@@ -27,7 +29,11 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
 
     Response? response;
     try {
-      response = await Network().postData(data, '/api/groups');
+      if (id == null) {
+        response = await Network().postData(data, '/api/groups');
+      } else {
+        response = await Network().putData(data, '/api/groups/$id');
+      }
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -46,7 +52,7 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
     }
 
     // エラーの場合
-    if (response.statusCode != 201) {
+    if (response.statusCode != 201 && response.statusCode != 200) {
       if (mounted) {
         var body = json.decode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,10 +75,18 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.currentGroup != null) {
+      nameController.text = widget.currentGroup!.name;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('グループ新規登録'),
+        title: Text(widget.currentGroup == null ? 'グループ新規登録' : 'グループ編集'),
         backgroundColor: const Color.fromARGB(255, 60, 0, 255),
       ),
       body: _isLoading
@@ -91,7 +105,8 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
                       const SizedBox(height: 10),
                       Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey)),
+                          border: Border.all(color: Colors.grey),
+                        ),
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: TextField(
                           controller: nameController,
@@ -108,9 +123,13 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
                         alignment: Alignment.center,
                         child: ElevatedButton(
                           onPressed: () async {
-                            await createGroup();
+                            if (widget.currentGroup == null) {
+                              await createUpdateGroup();
+                            } else {
+                              await createUpdateGroup(id: widget.currentGroup!.id);
+                            }
                           },
-                          child: const Text('登録'),
+                          child: Text(widget.currentGroup == null ? '登録' : '更新'),
                         ),
                       ),
                     ],
