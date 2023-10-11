@@ -80,11 +80,21 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 ListTile(
-                                    onTap: () {
-                                      // TODO:グループ編集ページに遷移
-                                    },
-                                    leading: const Icon(Icons.edit),
-                                    title: const Text('編集')),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            GroupsCreateEditPage(
+                                          currentGroup: fetchGroup,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  leading: const Icon(Icons.edit),
+                                  title: const Text('編集'),
+                                ),
                                 ListTile(
                                   onTap: () {
                                     // TODO:グループ削除処理
