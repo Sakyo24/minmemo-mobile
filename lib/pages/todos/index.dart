@@ -121,7 +121,7 @@ class _TodosIndexPageState extends State<TodosIndexPage> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => TodosCreateEditPage(currentTodo: fetchTodo)));
                           },
                           leading: const Icon(Icons.edit),
-                          title: const Text('編集')
+                          title: const Text('編集'),
                         ),
                         ListTile(
                           onTap: () async {
@@ -130,7 +130,7 @@ class _TodosIndexPageState extends State<TodosIndexPage> {
                             Navigator.pop(context);
                           },
                           leading: const Icon(Icons.delete),
-                          title: const Text('削除')
+                          title: const Text('削除'),
                         )
                       ]
                     )

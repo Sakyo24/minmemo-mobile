@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
+
+import '../../model/group.dart';
 import '../../model/todo.dart';
+import '../groups/index.dart';
 import 'index.dart';
 import '../../utils/network.dart';
 
 class TodosCreateEditPage extends StatefulWidget {
   final Todo? currentTodo;
-  const TodosCreateEditPage({super.key, this.currentTodo});
+  final Group? currentGroup;
+  const TodosCreateEditPage({super.key, this.currentTodo, this.currentGroup});
 
   @override
   State<TodosCreateEditPage> createState() => _TodosCreateEditPageState();
@@ -17,6 +21,7 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController detailController = TextEditingController();
   bool _isLoading = false;
+  String? group_id;
 
   // 登録・更新処理
   Future<void> createUpdateTodo({int? id}) async {
@@ -24,9 +29,10 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
       _isLoading = true;
     });
 
-    Map<String, String> data = {
+    Map<String, String?> data = {
       'title': titleController.text,
       'detail': detailController.text,
+      'group_id': group_id,
     };
 
     Response? response;
@@ -70,7 +76,7 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: ((context) => const TodosIndexPage())),
+      MaterialPageRoute(builder: ((context) => group_id != null ? const GroupsIndexPage() : const TodosIndexPage())),
     ).then((value) {
       setState(() {});
     });
@@ -82,6 +88,9 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
     if (widget.currentTodo != null) {
       titleController.text = widget.currentTodo!.title;
       detailController.text = widget.currentTodo!.detail;
+    }
+    if (widget.currentGroup != null) {
+      group_id = widget.currentGroup!.id;
     }
   }
 

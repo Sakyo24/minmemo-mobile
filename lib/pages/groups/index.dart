@@ -6,6 +6,7 @@ import '../../components/bottom_menu.dart';
 import '../../config/constants.dart';
 import '../../model/group.dart';
 import 'create_edit.dart';
+import 'show.dart';
 import '../../utils/network.dart';
 
 class GroupsIndexPage extends StatefulWidget {
@@ -16,21 +17,25 @@ class GroupsIndexPage extends StatefulWidget {
 }
 
 class _GroupsIndexPageState extends State<GroupsIndexPage> {
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   // グループリスト取得処理
   List items = [];
   Future<void> getGroups() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     Response? response;
     try {
       response = await Network().getData('/api/groups');
       var jsonResponse = jsonDecode(response.body);
       setState(() {
         items = jsonResponse['groups'];
-        _isLoading = false;
       });
     } catch (e) {
       debugPrint(e.toString());
+    } finally {
       setState(() {
         _isLoading = false;
       });
@@ -56,6 +61,7 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
+              padding: const EdgeInsets.only(bottom: 70),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic> data =
@@ -111,7 +117,12 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
                     icon: const Icon(Icons.edit),
                   ),
                   onTap: () {
-                    // TODO:グループ詳細ページに遷移
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              GroupsShowPage(currentGroup: fetchGroup)),
+                    );
                   },
                 );
               },
@@ -121,8 +132,7 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const GroupsCreateEditPage(),
-            ),
+                builder: (context) => const GroupsCreateEditPage()),
           );
         },
         tooltip: 'グループ追加',

@@ -47,7 +47,7 @@ class Network {
   }
 
   // DELETE
-  Future<Response> deleteData( String apiUrl) async {
+  Future<Response> deleteData(String apiUrl) async {
     await _setToken();
     Uri fullUrl = Uri.parse(_url + apiUrl);
     return await delete(fullUrl, headers: _getHeaders());
