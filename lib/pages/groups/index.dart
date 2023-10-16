@@ -42,6 +42,38 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
     }
   }
 
+  // 削除処理
+  Future<void> deleteGroup({required String id}) async {
+    Response? response;
+    try {
+      response = await Network().deleteData('/api/groups/$id');
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      setState(() {});
+    }
+
+    if (response == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("エラーが発生しました。"))
+        );
+      }
+      return;
+    }
+
+    // エラーの場合
+    if (response.statusCode != 204) {
+      if (mounted) {
+        var body = json.decode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          (response.statusCode >= 500 && response.statusCode < 600) ? const SnackBar(content: Text("サーバーエラーが発生しました。")) : SnackBar(content: Text(body['message']))
+        );
+      }
+      return;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -91,19 +123,19 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            GroupsCreateEditPage(
-                                          currentGroup: fetchGroup,
-                                        ),
-                                      ),
+                                          builder: (context) =>
+                                              GroupsCreateEditPage(
+                                                  currentGroup: fetchGroup)),
                                     );
                                   },
                                   leading: const Icon(Icons.edit),
                                   title: const Text('編集'),
                                 ),
                                 ListTile(
-                                  onTap: () {
-                                    // TODO:グループ削除処理
+                                  onTap: () async {
+                                    await deleteGroup(id: fetchGroup.id);
+                                    await getGroups();
+                                    Navigator.pop(context);
                                   },
                                   leading: const Icon(Icons.delete),
                                   title: const Text('削除'),
