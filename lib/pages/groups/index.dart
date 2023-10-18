@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../../components/bottom_menu.dart';
 import '../../config/constants.dart';
 import '../../model/group.dart';
+import '../../utils/app_colors.dart';
 import 'create_edit.dart';
 import 'show.dart';
 import '../../utils/network.dart';
@@ -55,9 +56,8 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
 
     if (response == null) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("エラーが発生しました。"))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("エラーが発生しました。")));
       }
       return;
     }
@@ -67,8 +67,9 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
       if (mounted) {
         var body = json.decode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
-          (response.statusCode >= 500 && response.statusCode < 600) ? const SnackBar(content: Text("サーバーエラーが発生しました。")) : SnackBar(content: Text(body['message']))
-        );
+            (response.statusCode >= 500 && response.statusCode < 600)
+                ? const SnackBar(content: Text("サーバーエラーが発生しました。"))
+                : SnackBar(content: Text(body['message'])));
       }
       return;
     }
@@ -84,14 +85,13 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('グループ一覧'),
-        backgroundColor: const Color.fromARGB(255, 60, 0, 255),
         automaticallyImplyLeading: false,
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
+        title: const Text('グループ一覧'),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               padding: const EdgeInsets.only(bottom: 70),
               itemCount: items.length,
@@ -168,7 +168,10 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
           );
         },
         tooltip: 'グループ追加',
-        child: const Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: AppColors.whiteColor,
+        ),
       ),
       bottomNavigationBar: const BottomMenu(currentPageIndex: PageIndex.group),
     );

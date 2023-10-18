@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import '../../model/group.dart';
 import '../../model/todo.dart';
+import '../../utils/app_colors.dart';
 import '../groups/index.dart';
 import 'index.dart';
 import '../../utils/network.dart';
@@ -76,7 +77,10 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: ((context) => group_id != null ? const GroupsIndexPage() : const TodosIndexPage())),
+      MaterialPageRoute(
+          builder: ((context) => group_id != null
+              ? const GroupsIndexPage()
+              : const TodosIndexPage())),
     ).then((value) {
       setState(() {});
     });
@@ -98,13 +102,12 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
         title: Text(widget.currentTodo == null ? 'メモ新規登録' : 'メモ編集'),
-        backgroundColor: const Color.fromARGB(255, 60, 0, 255),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : ListView(
               children: <Widget>[
                 Center(
@@ -115,40 +118,36 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
                       // タイトル
                       const Text('タイトル'),
                       const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.8,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: TextField(
                           controller: titleController,
                           decoration: const InputDecoration(
-                            border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
+                            hintText: 'タイトルを入力してください',
                           ),
                         ),
                       ),
                       const SizedBox(height: 40),
-                      // 詳細
-                      const Text('詳細'),
+                      // メモ
+                      const Text('メモ'),
                       const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.8,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: TextField(
                           controller: detailController,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
+                            hintText: 'メモを入力してください',
                           ),
                           keyboardType: TextInputType.multiline,
+                          minLines: 25,
                           maxLines: null,
                         ),
                       ),
                       const SizedBox(height: 40),
-                      // 登録ボタン
+                      // 登録・更新ボタン
                       Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         alignment: Alignment.center,
@@ -157,10 +156,14 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
                             if (widget.currentTodo == null) {
                               await createUpdateTodo();
                             } else {
-                              await createUpdateTodo(id: widget.currentTodo!.id);
+                              await createUpdateTodo(
+                                  id: widget.currentTodo!.id);
                             }
                           },
-                          child: Text(widget.currentTodo == null ? '登録' : '更新'),
+                          child: Text(
+                            widget.currentTodo == null ? '登録' : '更新',
+                            style: TextStyle(color: AppColors.whiteColor),
+                          ),
                         ),
                       ),
                     ],
