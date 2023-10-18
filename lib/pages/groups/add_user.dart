@@ -3,6 +3,7 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 import '../../model/group.dart';
+import '../../utils/app_colors.dart';
 import '../../utils/network.dart';
 import 'index.dart';
 
@@ -84,13 +85,12 @@ class _AddUserPageState extends State<AddUserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
         title: const Text('ユーザー追加'),
-        backgroundColor: const Color.fromARGB(255, 60, 0, 255),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : ListView(
               children: <Widget>[
                 Center(
@@ -108,15 +108,11 @@ class _AddUserPageState extends State<AddUserPage> {
                       const SizedBox(height: 10),
                       const Text('メールアドレス'),
                       const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                        ),
+                      SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: TextField(
                           controller: emailController,
                           decoration: const InputDecoration(
-                            border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
                           ),
                         ),
@@ -129,7 +125,10 @@ class _AddUserPageState extends State<AddUserPage> {
                           onPressed: () async {
                             await addUser(id: widget.currentGroup.id);
                           },
-                          child: const Text('追加'),
+                          child: Text(
+                            '追加',
+                            style: TextStyle(color: AppColors.whiteColor),
+                          ),
                         ),
                       ),
                     ],

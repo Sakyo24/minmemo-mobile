@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import '../../components/bottom_menu.dart';
 import '../../config/constants.dart';
+import '../../utils/app_colors.dart';
 import '../../utils/network.dart';
 import '../top.dart';
 
@@ -102,8 +103,10 @@ class _UserShowPageState extends State<UserShowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("マイページ"),
         automaticallyImplyLeading: false,
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
+        title: const Text("マイページ"),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -114,11 +117,13 @@ class _UserShowPageState extends State<UserShowPage> {
                     onPressed: () {
                       _logout();
                     },
-                    child: const Text("ログアウト"),
+                    child: Text(
+                      "ログアウト",
+                      style: TextStyle(color: AppColors.whiteColor),
+                    ),
                   )
                 ],
               ),
-
             ),
       bottomNavigationBar: const BottomMenu(currentPageIndex: PageIndex.user),
     );

@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../../model/group.dart';
 import '../../model/todo.dart';
 import '../../model/user.dart';
+import '../../utils/app_colors.dart';
 import '../todos/create_edit.dart';
 import '../todos/show.dart';
 import '../../utils/network.dart';
@@ -334,10 +335,14 @@ class _GroupsShowPageState extends State<GroupsShowPage>
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
         title: const Text('グループ詳細'),
-        backgroundColor: const Color.fromARGB(255, 60, 0, 255),
         bottom: TabBar(
           controller: _tabController,
+          indicatorColor: AppColors.primaryColor,
+          labelColor: AppColors.primaryColor,
+          unselectedLabelColor: Colors.black,
           tabs: const [
             Tab(child: Text('ユーザー')),
             Tab(child: Text('メモ')),
@@ -395,7 +400,10 @@ class _GroupsShowPageState extends State<GroupsShowPage>
           }
         },
         tooltip: 'メモ追加',
-        child: const Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: AppColors.whiteColor,
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 import '../../model/group.dart';
+import '../../utils/app_colors.dart';
 import 'index.dart';
 import '../../utils/network.dart';
 
@@ -87,8 +88,9 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
         title: Text(widget.currentGroup == null ? 'グループ新規登録' : 'グループ編集'),
-        backgroundColor: const Color.fromARGB(255, 60, 0, 255),
       ),
       body: _isLoading
           ? const Center(
@@ -104,33 +106,33 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
                       // グループ名
                       const Text('グループ名'),
                       const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                        ),
+                      SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: TextField(
                           controller: nameController,
                           decoration: const InputDecoration(
-                            border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
                           ),
                         ),
                       ),
                       const SizedBox(height: 40),
-                      // 登録ボタン
+                      // 登録・更新ボタン
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         alignment: Alignment.center,
                         child: ElevatedButton(
                           onPressed: () async {
                             if (widget.currentGroup == null) {
                               await createUpdateGroup();
                             } else {
-                              await createUpdateGroup(id: widget.currentGroup!.id);
+                              await createUpdateGroup(
+                                  id: widget.currentGroup!.id);
                             }
                           },
-                          child: Text(widget.currentGroup == null ? '登録' : '更新'),
+                          child: Text(
+                            widget.currentGroup == null ? '登録' : '更新',
+                            style: TextStyle(color: AppColors.whiteColor),
+                          ),
                         ),
                       ),
                     ],
