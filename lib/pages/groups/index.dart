@@ -84,12 +84,12 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.whiteColor,
-        elevation: 0,
-        title: const Text('グループ一覧'),
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: AppColors.whiteColor,
+      //   elevation: 0,
+      //   title: const Text('グループ一覧'),
+      // ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -173,7 +173,7 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
           color: AppColors.whiteColor,
         ),
       ),
-      bottomNavigationBar: const BottomMenu(currentPageIndex: PageIndex.group),
+      // bottomNavigationBar: const BottomMenu(currentPageIndex: PageIndex.group),
     );
   }
 }

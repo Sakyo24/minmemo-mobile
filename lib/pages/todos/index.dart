@@ -84,12 +84,6 @@ class _TodosIndexPageState extends State<TodosIndexPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.whiteColor,
-        elevation: 0,
-        title: const Text('メモ一覧'),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -173,7 +167,6 @@ class _TodosIndexPageState extends State<TodosIndexPage> {
           color: AppColors.whiteColor,
         ),
       ),
-      bottomNavigationBar: const BottomMenu(currentPageIndex: PageIndex.todo),
     );
   }
 }

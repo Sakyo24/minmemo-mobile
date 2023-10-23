@@ -4,9 +4,8 @@ import 'dart:convert';
 
 import '../../model/group.dart';
 import '../../model/todo.dart';
+import '../index.dart';
 import '../../utils/app_colors.dart';
-import '../groups/index.dart';
-import 'index.dart';
 import '../../utils/network.dart';
 
 class TodosCreateEditPage extends StatefulWidget {
@@ -79,8 +78,8 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
       context,
       MaterialPageRoute(
           builder: ((context) => group_id != null
-              ? const GroupsIndexPage()
-              : const TodosIndexPage())),
+              ? const IndexPage(toPageIndex: 1)
+              : const IndexPage(toPageIndex: 0))),
     ).then((value) {
       setState(() {});
     });
