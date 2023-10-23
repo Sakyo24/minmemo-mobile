@@ -3,9 +3,9 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 import '../../model/group.dart';
+import '../index.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/network.dart';
-import 'index.dart';
 
 class AddUserPage extends StatefulWidget {
   final Group currentGroup;
@@ -67,7 +67,7 @@ class _AddUserPageState extends State<AddUserPage> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: ((context) => const GroupsIndexPage())),
+      MaterialPageRoute(builder: ((context) => const IndexPage(toPageIndex: 1))),
     ).then((value) {
       setState(() {});
     });

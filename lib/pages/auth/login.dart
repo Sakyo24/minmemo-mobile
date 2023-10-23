@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../utils/app_colors.dart';
 import '../../utils/network.dart';
-import '../todos/index.dart';
+import '../index.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const TodosIndexPage()),
+      MaterialPageRoute(builder: (context) => const IndexPage()),
     );
   }
 

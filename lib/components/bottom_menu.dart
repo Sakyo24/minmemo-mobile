@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io';
 
-import '../config/constants.dart';
 import '../model/admob.dart';
-import '../pages/groups/index.dart';
-import '../pages/todos/index.dart';
-import '../pages/user/show.dart';
 
 class BottomMenu extends StatefulWidget {
   final int currentPageIndex;
+  final Function(int) callback;
 
   const BottomMenu({
     Key? key,
     required this.currentPageIndex,
+    required this.callback,
   }) : super(key: key);
 
   @override
-  State<BottomMenu> createState() => _MenuState();
+  State<BottomMenu> createState() => _BottomMenuState();
 }
 
-class _MenuState extends State<BottomMenu> {
+class _BottomMenuState extends State<BottomMenu> {
   // バナー広告
   late BannerAd bannerAd;
   bool isAdLoaded = false;
@@ -39,7 +37,10 @@ class _MenuState extends State<BottomMenu> {
     )..load();
   }
 
-  // 初期処理
+  void sendCurrentPageIndex(int data) {
+    widget.callback(data);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,36 +61,21 @@ class _MenuState extends State<BottomMenu> {
         BottomNavigationBar(
           currentIndex: widget.currentPageIndex,
           items: const [
-            BottomNavigationBarItem(label: 'メモ', icon: Icon(Icons.list)),
-            BottomNavigationBarItem(label: 'グループ', icon: Icon(Icons.groups)),
+            BottomNavigationBarItem(
+              label: 'メモ',
+              icon: Icon(Icons.list),
+            ),
+            BottomNavigationBarItem(
+              label: 'グループ',
+              icon: Icon(Icons.groups),
+            ),
             BottomNavigationBarItem(
               label: 'マイページ',
               icon: Icon(Icons.perm_identity),
             ),
           ],
           onTap: (int value) {
-            if (value == PageIndex.todo) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TodosIndexPage(),
-                ),
-              );
-            } else if (value == PageIndex.group) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const GroupsIndexPage(),
-                ),
-              );
-            } else if (value == PageIndex.user) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserShowPage(),
-                ),
-              );
-            }
+            sendCurrentPageIndex(value);
           },
         )
       ],

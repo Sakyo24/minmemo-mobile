@@ -102,12 +102,6 @@ class _UserShowPageState extends State<UserShowPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.whiteColor,
-        elevation: 0,
-        title: const Text("マイページ"),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
@@ -125,7 +119,6 @@ class _UserShowPageState extends State<UserShowPage> {
                 ],
               ),
             ),
-      bottomNavigationBar: const BottomMenu(currentPageIndex: PageIndex.user),
     );
   }
 }

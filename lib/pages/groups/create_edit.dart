@@ -3,8 +3,8 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 import '../../model/group.dart';
+import '../index.dart';
 import '../../utils/app_colors.dart';
-import 'index.dart';
 import '../../utils/network.dart';
 
 class GroupsCreateEditPage extends StatefulWidget {
@@ -70,7 +70,7 @@ class _GroupsCreateEditPageState extends State<GroupsCreateEditPage> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: ((context) => const GroupsIndexPage())),
+      MaterialPageRoute(builder: ((context) => const IndexPage(toPageIndex: 1))),
     ).then((value) {
       setState(() {});
     });

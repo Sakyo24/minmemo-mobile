@@ -5,7 +5,7 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import './pages/todos/index.dart';
+import './pages/index.dart';
 import './pages/top.dart';
 import './utils/app_colors.dart';
 import './utils/network.dart';
@@ -71,7 +71,7 @@ class _TodoAppState extends State<TodoApp> {
       home: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _isAuth
-              ? const TodosIndexPage()
+              ? const IndexPage()
               : const TopPage(),
     );
   }
