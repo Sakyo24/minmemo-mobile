@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
-import '../../components/bottom_menu.dart';
-import '../../config/constants.dart';
 import '../../model/group.dart';
 import '../../utils/app_colors.dart';
 import 'create_edit.dart';
@@ -84,12 +82,6 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor: AppColors.whiteColor,
-      //   elevation: 0,
-      //   title: const Text('グループ一覧'),
-      // ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -173,7 +165,6 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
           color: AppColors.whiteColor,
         ),
       ),
-      // bottomNavigationBar: const BottomMenu(currentPageIndex: PageIndex.group),
     );
   }
 }

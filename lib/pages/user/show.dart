@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import '../../components/bottom_menu.dart';
-import '../../config/constants.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/network.dart';
-import '../top.dart';
 
 class UserShowPage extends StatefulWidget {
   const UserShowPage({super.key});
@@ -34,65 +29,6 @@ class _UserShowPageState extends State<UserShowPage> {
     }
   }
 
-  // ログアウト処理
-  Future<void> _logout() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    Map<String, String> data = {'email': _email!};
-
-    Response? res;
-    try {
-      res = await Network().postData(data, '/api/logout');
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-
-    if (res == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("エラーが発生しました。"),
-          ),
-        );
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
-
-    // エラーの場合
-    if (res.statusCode != 204) {
-      var body = json.decode(res.body);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          (res.statusCode >= 500 && res.statusCode < 600)
-              ? const SnackBar(
-                  content: Text("サーバーエラーが発生しました。"),
-                )
-              : SnackBar(
-                  content: Text(body['message']),
-                ),
-        );
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
-
-    // 正常の場合
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    localStorage.remove('user');
-    localStorage.remove('token');
-
-    if (!mounted) return;
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const TopPage()));
-  }
-
   @override
   void initState() {
     super.initState();
@@ -104,20 +40,45 @@ class _UserShowPageState extends State<UserShowPage> {
     return Scaffold(
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Center(
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      _logout();
-                    },
-                    child: Text(
-                      "ログアウト",
-                      style: TextStyle(color: AppColors.whiteColor),
+          : ListView(
+              padding: const EdgeInsets.all(20.0),
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    // タイトル
+                    const Text('名前'),
+                    const SizedBox(height: 10),
+                    Text(
+                      _name ?? '',
+                      style: const TextStyle(fontSize: 24.0),
                     ),
-                  )
-                ],
-              ),
+                    const SizedBox(height: 40),
+                    // タイトル
+                    const Text('メールアドレス'),
+                    const SizedBox(height: 10),
+                    Text(
+                      _email ?? '',
+                      style: const TextStyle(fontSize: 24.0),
+                    ),
+                    const SizedBox(height: 40),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // 編集ページに遷移
+                        },
+                        child: Text(
+                          "編集",
+                          style: TextStyle(color: AppColors.whiteColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
     );
   }
