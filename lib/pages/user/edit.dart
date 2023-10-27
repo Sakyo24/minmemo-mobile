@@ -1,38 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import '../../model/group.dart';
 import '../index.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/network.dart';
 
-class AddUserPage extends StatefulWidget {
-  final Group currentGroup;
-  const AddUserPage({super.key, required this.currentGroup});
+class UserEditPage extends StatefulWidget {
+  final String name;
+  final String email;
+  const UserEditPage({super.key, required this.name, required this.email});
 
   @override
-  State<AddUserPage> createState() => _AddUserPageState();
+  State<UserEditPage> createState() => _UserEditPageState();
 }
 
-class _AddUserPageState extends State<AddUserPage> {
+class _UserEditPageState extends State<UserEditPage> {
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   bool _isLoading = false;
-  late String group_name;
 
-  // ユーザー追加処理
-  Future<void> addUser({required String id}) async {
+  // 更新処理
+  Future<void> updateUser() async {
     setState(() {
       _isLoading = true;
     });
 
-    Map<String, String?> data = {
+    Map<String, String> data = {
+      'name': nameController.text,
       'email': emailController.text,
     };
 
     Response? response;
     try {
-      response = await Network().postData(data, '/api/groups/$id/add_user');
+      response = await Network().putData(data, '/api/user/update');
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -50,10 +52,11 @@ class _AddUserPageState extends State<AddUserPage> {
       return;
     }
 
+    var body = json.decode(response.body);
+
     // エラーの場合
     if (response.statusCode != 200) {
       if (mounted) {
-        var body = json.decode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           (response.statusCode >= 500 && response.statusCode < 600)
               ? const SnackBar(content: Text("サーバーエラーが発生しました。"))
@@ -64,10 +67,13 @@ class _AddUserPageState extends State<AddUserPage> {
     }
 
     // 成功の場合
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.setString('user', json.encode(body['user']));
+
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: ((context) => const IndexPage(toPageIndex: 1))),
+      MaterialPageRoute(builder: ((context) => const IndexPage(toPageIndex: 0))),
     ).then((value) {
       setState(() {});
     });
@@ -76,9 +82,8 @@ class _AddUserPageState extends State<AddUserPage> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      group_name = widget.currentGroup.name;
-    });
+    nameController.text = widget.name;
+    emailController.text = widget.email;
   }
 
   @override
@@ -87,7 +92,7 @@ class _AddUserPageState extends State<AddUserPage> {
       appBar: AppBar(
         backgroundColor: AppColors.whiteColor,
         elevation: 0,
-        title: const Text('ユーザー追加'),
+        title: const Text('ユーザー編集'),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -98,14 +103,20 @@ class _AddUserPageState extends State<AddUserPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 40),
+                      // 名前
+                      const Text('名前'),
+                      const SizedBox(height: 10),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
-                        child: Text(
-                          '$group_nameに追加したいユーザーのメールアドレスを入力してください',
-                          softWrap: true,
+                        child: TextField(
+                          controller: nameController,
+                          decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.only(left: 10),
+                              hintText: '名前を入力してください'),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 40),
+                      // メールアドレス
                       const Text('メールアドレス'),
                       const SizedBox(height: 10),
                       SizedBox(
@@ -113,27 +124,28 @@ class _AddUserPageState extends State<AddUserPage> {
                         child: TextField(
                           controller: emailController,
                           decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                          ),
+                              contentPadding: EdgeInsets.only(left: 10),
+                              hintText: 'メールアドレスを入力してください'),
                         ),
                       ),
                       const SizedBox(height: 40),
+                      // 更新ボタン
                       Container(
                         width: MediaQuery.of(context).size.width * 0.9,
                         alignment: Alignment.center,
                         child: ElevatedButton(
                           onPressed: () async {
-                            await addUser(id: widget.currentGroup.id);
+                            await updateUser();
                           },
                           child: Text(
-                            '追加',
+                            '更新',
                             style: TextStyle(color: AppColors.whiteColor),
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
-                ),
+                )
               ],
             ),
     );

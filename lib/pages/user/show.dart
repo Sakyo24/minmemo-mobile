@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../../utils/app_colors.dart';
+import 'edit.dart';
 
 class UserShowPage extends StatefulWidget {
   const UserShowPage({super.key});
@@ -68,7 +69,15 @@ class _UserShowPageState extends State<UserShowPage> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          // 編集ページに遷移
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserEditPage(
+                                name: _name ?? '',
+                                email: _email ?? '',
+                              ),
+                            ),
+                          );
                         },
                         child: Text(
                           "編集",

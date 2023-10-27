@@ -148,7 +148,7 @@ class _TodosCreateEditPageState extends State<TodosCreateEditPage> {
                       const SizedBox(height: 40),
                       // 登録・更新ボタン
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         alignment: Alignment.center,
                         child: ElevatedButton(
                           onPressed: () async {
