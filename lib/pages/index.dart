@@ -10,6 +10,7 @@ import './user/show.dart';
 import './top.dart';
 import '../utils/app_colors.dart';
 import '../utils/network.dart';
+import 'inquiries/create.dart';
 
 class IndexPage extends StatefulWidget {
   final int? toPageIndex;
@@ -149,7 +150,11 @@ class _IndexPageState extends State<IndexPage> {
             },
             onSelected: (int value) {
               if (value == 1) {
-                // お問い合わせ
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const InquiriesCreatePage()),
+                );
               } else if (value == 2) {
                 logout();
               }

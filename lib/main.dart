@@ -52,8 +52,7 @@ class _TodoAppState extends State<TodoApp> {
 
     if (response == null) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("エラーが発生しました。")));
+        debugPrint("エラーが発生しました。");
       }
       return;
     }
@@ -62,10 +61,9 @@ class _TodoAppState extends State<TodoApp> {
     if (response.statusCode != 200) {
       if (mounted) {
         var body = json.decode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-            (response.statusCode >= 500 && response.statusCode < 600)
-                ? const SnackBar(content: Text("サーバーエラーが発生しました。"))
-                : SnackBar(content: Text(body['message'])));
+        (response.statusCode >= 500 && response.statusCode < 600)
+            ? debugPrint("サーバーエラーが発生しました。")
+            : debugPrint(body['message']);
       }
       return;
     }
