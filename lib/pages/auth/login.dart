@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../../utils/app_colors.dart';
 import '../../utils/network.dart';
 import '../index.dart';
+import 'password_reset.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -97,8 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextFormField(
                         keyboardType: TextInputType.text,
-                        decoration:
-                            const InputDecoration(hintText: "メールアドレス"),
+                        decoration: const InputDecoration(hintText: "メールアドレス"),
                         validator: (emailValue) {
                           if (emailValue == null || emailValue == "") {
                             return 'メールアドレスは必ず入力してください。';
@@ -128,6 +128,16 @@ class _LoginPageState extends State<LoginPage> {
                           "ログイン",
                           style: TextStyle(color: AppColors.whiteColor),
                         ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PasswordResetPage()),
+                          );
+                        },
+                        child: const Text('パスワードを忘れた場合は、こちら'),
                       ),
                     ],
                   ),
