@@ -5,12 +5,13 @@ import 'dart:convert';
 
 import '../components/bottom_menu.dart';
 import './groups/index.dart';
+import './inquiries/create.dart';
 import './todos/index.dart';
+import './user/edit_password.dart';
 import './user/show.dart';
 import './top.dart';
 import '../utils/app_colors.dart';
 import '../utils/network.dart';
-import 'inquiries/create.dart';
 
 class IndexPage extends StatefulWidget {
   final int? toPageIndex;
@@ -137,10 +138,14 @@ class _IndexPageState extends State<IndexPage> {
               return [
                 const PopupMenuItem(
                   value: 1,
-                  child: Text('お問い合わせ'),
+                  child: Text('パスワード変更'),
                 ),
                 const PopupMenuItem(
                   value: 2,
+                  child: Text('お問い合わせ'),
+                ),
+                const PopupMenuItem(
+                  value: 3,
                   child: Text(
                     'ログアウト',
                     style: TextStyle(color: Colors.red),
@@ -153,9 +158,15 @@ class _IndexPageState extends State<IndexPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const InquiriesCreatePage()),
+                      builder: (context) => const EditPasswordPage()),
                 );
               } else if (value == 2) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const InquiriesCreatePage()),
+                );
+              } else if (value == 3) {
                 logout();
               }
             },
