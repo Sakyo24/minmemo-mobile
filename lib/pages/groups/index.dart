@@ -3,9 +3,10 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 import '../../model/group.dart';
-import '../../utils/app_colors.dart';
+import '../auth/not_verified.dart';
 import 'create_edit.dart';
 import 'show.dart';
+import '../../utils/app_colors.dart';
 import '../../utils/network.dart';
 
 class GroupsIndexPage extends StatefulWidget {
@@ -28,10 +29,6 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
     Response? response;
     try {
       response = await Network().getData('/api/groups');
-      var jsonResponse = jsonDecode(response.body);
-      setState(() {
-        items = jsonResponse['groups'];
-      });
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -39,6 +36,41 @@ class _GroupsIndexPageState extends State<GroupsIndexPage> {
         _isLoading = false;
       });
     }
+
+    if (response == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("エラーが発生しました。")));
+      }
+      return;
+    }
+
+    // エラーの場合
+    if (response.statusCode != 200) {
+      if (mounted) {
+        var body = json.decode(response.body);
+        if (response.statusCode == 403 &&
+            body['message'] == "Your email address is not verified.") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NotVerifiedPage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              (response.statusCode >= 500 && response.statusCode < 600)
+                  ? const SnackBar(content: Text("サーバーエラーが発生しました。"))
+                  : SnackBar(content: Text(body['message'])));
+        }
+      }
+      return;
+    }
+
+    // 正常の場合
+    if (!mounted) return;
+    var jsonResponse = jsonDecode(response.body);
+    setState(() {
+      items = jsonResponse['groups'];
+    });
   }
 
   // 削除処理
